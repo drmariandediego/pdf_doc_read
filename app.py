@@ -9,19 +9,19 @@ API_KEY = os.getenv("API_KEY")
 FOLDER_ID = os.getenv("FOLDER_ID")  
 
 def obtener_texto_docs():
-    """Obtiene texto de todos los archivos .txt en Google Drive."""
+    """Obtiene texto de todos los Google Docs en la carpeta de Google Drive."""
     documentos = []
     page_token = ""
 
     while True:
-       query_drive = f"'{FOLDER_ID}' in parents and mimeType='application/vnd.google-apps.document'"
+        query_drive = f"'{FOLDER_ID}' in parents and mimeType='application/vnd.google-apps.document'"
         url = f"https://www.googleapis.com/drive/v3/files?q={query_drive}&key={API_KEY}&fields=nextPageToken, files(id, name)&pageSize=100"
 
         if page_token:
             url += f"&pageToken={page_token}"
 
         response = requests.get(url)
-        
+
         print("🔍 API RESPONSE:", response.json())  # 👀 Ver respuesta en logs de Render
 
         if response.status_code != 200:
@@ -35,9 +35,9 @@ def obtener_texto_docs():
                 file_id = archivo["id"]
                 file_name = archivo["name"]
 
-                # Descargar el contenido del archivo como texto
-                url_download = f"https://www.googleapis.com/drive/v3/files/{file_id}?alt=media&key={API_KEY}"
-                response = requests.get(url_download)
+                # Exportar el contenido del Google Doc como texto
+                url_export = f"https://www.googleapis.com/drive/v3/files/{file_id}/export?mimeType=text/plain&key={API_KEY}"
+                response = requests.get(url_export)
 
                 if response.status_code == 200:
                     contenido = response.text
@@ -50,7 +50,7 @@ def obtener_texto_docs():
         if not page_token:
             break
 
-    return documentos if documentos else "❌ No se encontraron archivos en la carpeta."
+    return documentos if documentos else "❌ No se encontraron documentos en la carpeta."
 
 @app.route('/get_docs', methods=['GET'])
 def get_docs():
