@@ -1,5 +1,4 @@
 from flask import Flask, request, jsonify
-from scrape import obtener_pdfs, buscar_pdf_relevante, descargar_y_leer_pdf
 
 app = Flask(__name__)
 
