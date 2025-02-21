@@ -14,7 +14,7 @@ def obtener_texto_docs():
     page_token = ""
 
     while True:
-        query_drive = f"'{FOLDER_ID}' in parents and mimeType='text/plain'"
+       query_drive = f"'{FOLDER_ID}' in parents and mimeType='application/vnd.google-apps.document'"
         url = f"https://www.googleapis.com/drive/v3/files?q={query_drive}&key={API_KEY}&fields=nextPageToken, files(id, name)&pageSize=100"
 
         if page_token:
