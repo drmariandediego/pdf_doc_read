@@ -27,7 +27,7 @@ def obtener_texto_docs():
         print("🔍 API RESPONSE:", response.json())  # 👀 Ver respuesta en logs de Render
 
         if response.status_code != 200:
-            return f"Error en la API: {response.json()}"
+            return [{"error": f"Error en la API: {response.json()}"}]
 
         data = response.json()
         archivos = data.get("files", [])
@@ -43,6 +43,10 @@ def obtener_texto_docs():
 
                 if response.status_code == 200:
                     contenido = response.text
+
+                    # 🔥 Solución para caracteres mal formateados (ISO-8859-1 → UTF-8)
+                    contenido = contenido.encode("latin1").decode("utf-8", errors="ignore")
+
                     documentos.append({"nombre": file_name, "contenido": contenido})  # 🔥 SIN LÍMITE DE 1000 CARACTERES
                 else:
                     documentos.append({"nombre": file_name, "contenido": "Error al extraer contenido"})
@@ -52,13 +56,13 @@ def obtener_texto_docs():
         if not page_token:
             break
 
-    return documentos if documentos else "❌ No se encontraron documentos en la carpeta."
+    return documentos if documentos else [{"error": "❌ No se encontraron documentos en la carpeta."}]
 
 @app.route('/get_docs', methods=['GET'])
 def get_docs():
     """API para obtener documentos de Google Drive con TODO su contenido."""
     data = obtener_texto_docs()
-    return jsonify(data)
+    return jsonify(data), 200, {"Content-Type": "application/json; charset=utf-8"}
 
 @app.route('/openapi.yaml', methods=['GET'])
 def serve_openapi():
