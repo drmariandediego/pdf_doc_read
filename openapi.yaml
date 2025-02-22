@@ -4,7 +4,7 @@ info:
   description: API para obtener el contenido de documentos almacenados en Google Drive.
   version: "1.0"
 servers:
-  - url: https://pdf-doc-read.onrender.com
+  - url: "https://pdf-doc-read.onrender.com/"
 paths:
   /get_docs:
     get:
