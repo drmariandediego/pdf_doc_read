@@ -1,5 +1,5 @@
 import os
-from flask import Flask, jsonify
+from flask import Flask, jsonify, send_from_directory
 import requests
 
 app = Flask(__name__)
@@ -57,6 +57,11 @@ def get_docs():
     """API para obtener documentos de Google Drive con su contenido."""
     data = obtener_texto_docs()
     return jsonify(data)
+
+@app.route('/openapi.yaml')
+def serve_openapi():
+    """Sirve el archivo openapi.yaml desde el servidor."""
+    return send_from_directory(os.path.dirname(__file__), "openapi.yaml")
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=10000)
