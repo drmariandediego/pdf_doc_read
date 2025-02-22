@@ -1,4 +1,4 @@
-openapi: 3.0.3
+openapi: 3.0.4
 info:
   title: API de Documentos de Google Drive
   description: API para obtener el contenido completo de los documentos almacenados en Google Drive.
