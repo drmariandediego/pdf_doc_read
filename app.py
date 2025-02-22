@@ -1,5 +1,6 @@
 import os
 from flask import Flask, jsonify, send_file
+from flask_cors import CORS
 import requests
 
 app = Flask(__name__)
