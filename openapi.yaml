@@ -27,4 +27,3 @@ paths:
                     contenido:
                       type: string
                       description: Contenido completo del documento
-components: {}
