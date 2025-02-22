@@ -4,6 +4,7 @@ from flask_cors import CORS
 import requests
 
 app = Flask(__name__)
+CORS(app)  # 🔥 Habilita CORS en toda la API
 
 # 🔑 API Key y Folder ID desde las variables de entorno de Render
 API_KEY = os.getenv("API_KEY")  
