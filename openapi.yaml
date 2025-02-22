@@ -1,18 +1,19 @@
 openapi: 3.0.1
 info:
   title: API de Documentos de Google Drive
-  description: API para obtener el contenido de documentos almacenados en Google Drive.
+  description: API para obtener el contenido completo de los documentos almacenados en Google Drive.
   version: "1.0"
 servers:
-  - url: "https://pdf-doc-read.onrender.com/"
+  - url: "https://pdf-doc-read.onrender.com"
 paths:
   /get_docs:
     get:
-      summary: Obtiene el texto de los documentos en Google Drive
+      summary: Obtiene el texto completo de los documentos en Google Drive
       operationId: obtener_docs_drive
+      parameters: []
       responses:
         "200":
-          description: Lista de documentos con su contenido
+          description: Lista de documentos con su contenido completo
           content:
             application/json:
               schema:
@@ -25,4 +26,5 @@ paths:
                       description: Nombre del documento
                     contenido:
                       type: string
-                      description: Contenido del documento (limitado a 1000 caracteres)
+                      description: Contenido completo del documento
+components: {}
