@@ -4,13 +4,12 @@ info:
   description: API para obtener el contenido completo de los documentos almacenados en Google Drive.
   version: "1.0"
 servers:
-  - url: https://pdf-doc-read.onrender.com/
+  - url: "https://pdf-doc-read.onrender.com"
 paths:
   /get_docs:
     get:
       summary: Obtiene el texto completo de los documentos en Google Drive
       operationId: obtener_docs_drive
-      parameters: []
       responses:
         "200":
           description: Lista de documentos con su contenido completo
@@ -27,3 +26,11 @@ paths:
                     contenido:
                       type: string
                       description: Contenido completo del documento
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+security:
+  - ApiKeyAuth: []
