@@ -9,7 +9,7 @@ API_KEY = os.getenv("API_KEY")
 FOLDER_ID = os.getenv("FOLDER_ID")  
 
 def obtener_texto_docs():
-    """Obtiene texto de todos los Google Docs en la carpeta de Google Drive."""
+    """Obtiene TODO el texto de TODOS los Google Docs en la carpeta de Google Drive."""
     documentos = []
     page_token = ""
 
@@ -41,7 +41,7 @@ def obtener_texto_docs():
 
                 if response.status_code == 200:
                     contenido = response.text
-                    documentos.append({"nombre": file_name, "contenido": contenido[:1000]})  # Limita a 1000 caracteres
+                    documentos.append({"nombre": file_name, "contenido": contenido})  # 🔥 SIN LÍMITE DE 1000 CARACTERES
                 else:
                     documentos.append({"nombre": file_name, "contenido": "Error al extraer contenido"})
 
@@ -54,7 +54,7 @@ def obtener_texto_docs():
 
 @app.route('/get_docs', methods=['GET'])
 def get_docs():
-    """API para obtener documentos de Google Drive con su contenido."""
+    """API para obtener documentos de Google Drive con TODO su contenido."""
     data = obtener_texto_docs()
     return jsonify(data)
 
@@ -69,4 +69,3 @@ def serve_openapi():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=10000)
-
