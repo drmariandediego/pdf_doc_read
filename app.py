@@ -1,5 +1,5 @@
 import os
-from flask import Flask, jsonify, send_from_directory
+from flask import Flask, jsonify, send_file
 import requests
 
 app = Flask(__name__)
@@ -58,10 +58,15 @@ def get_docs():
     data = obtener_texto_docs()
     return jsonify(data)
 
-@app.route('/openapi.yaml')
+@app.route('/openapi.yaml', methods=['GET'])
 def serve_openapi():
-    """Sirve el archivo openapi.yaml desde el servidor."""
-    return send_from_directory(os.path.dirname(__file__), "openapi.yaml")
+    """Sirve el archivo openapi.yaml desde la raíz del proyecto."""
+    openapi_path = os.path.join(os.path.dirname(__file__), "openapi.yaml")
+    if os.path.exists(openapi_path):
+        return send_file(openapi_path, mimetype='text/yaml')
+    else:
+        return jsonify({"error": "Archivo openapi.yaml no encontrado"}), 404
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=10000)
+
