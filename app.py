@@ -37,9 +37,23 @@ def obtener_texto_docs():
                 file_id = archivo["id"]
                 file_name = archivo["name"]
 
-                # Exportar el contenido del Google Doc como texto
-                url_export = f"https://www.googleapis.com/drive/v3/files/{file_id}/export?mimeType=text/plain&key={API_KEY}"
-                response = requests.get(url_export)
+                # Determinar si el archivo es un Google Doc o un .txt
+if archivo["mimeType"] == "application/vnd.google-apps.document":
+    # Exportar Google Docs como texto
+    url_export = f"https://www.googleapis.com/drive/v3/files/{file_id}/export?mimeType=text/plain&key={API_KEY}"
+elif archivo["mimeType"] == "text/plain":
+    # Descargar archivos .txt en bruto
+    url_export = f"https://www.googleapis.com/drive/v3/files/{file_id}?alt=media&key={API_KEY}"
+
+# Descargar contenido del archivo
+response = requests.get(url_export)
+
+if response.status_code == 200:
+    contenido = response.text
+    documentos.append({"nombre": file_name, "contenido": contenido})
+else:
+    documentos.append({"nombre": file_name, "contenido": "Error al extraer contenido"})
+
 
                 if response.status_code == 200:
                     contenido = response.text
