@@ -11,13 +11,13 @@ API_KEY = os.getenv("API_KEY")
 FOLDER_ID = os.getenv("FOLDER_ID")  
 
 def obtener_texto_docs():
-    """Obtiene TODO el texto de TODOS los Google Docs en la carpeta de Google Drive."""
+    """Obtiene TODO el texto de TODOS los Google Docs y archivos .txt en la carpeta de Google Drive."""
     documentos = []
     page_token = ""
 
     while True:
         query_drive = f"'{FOLDER_ID}' in parents and (mimeType='application/vnd.google-apps.document' or mimeType='text/plain')"
-        url = f"https://www.googleapis.com/drive/v3/files?q={query_drive}&key={API_KEY}&fields=nextPageToken, files(id, name)&pageSize=100"
+        url = f"https://www.googleapis.com/drive/v3/files?q={query_drive}&key={API_KEY}&fields=nextPageToken, files(id, name, mimeType)&pageSize=100"
 
         if page_token:
             url += f"&pageToken={page_token}"
@@ -36,24 +36,20 @@ def obtener_texto_docs():
             for archivo in archivos:
                 file_id = archivo["id"]
                 file_name = archivo["name"]
+                mime_type = archivo["mimeType"]
 
-                # Determinar si el archivo es un Google Doc o un .txt
-if archivo["mimeType"] == "application/vnd.google-apps.document":
-    # Exportar Google Docs como texto
-    url_export = f"https://www.googleapis.com/drive/v3/files/{file_id}/export?mimeType=text/plain&key={API_KEY}"
-elif archivo["mimeType"] == "text/plain":
-    # Descargar archivos .txt en bruto
-    url_export = f"https://www.googleapis.com/drive/v3/files/{file_id}?alt=media&key={API_KEY}"
+                # 🔥 Determinar si es un Google Doc o un archivo .txt
+                if mime_type == "application/vnd.google-apps.document":
+                    # Exportar Google Docs como texto
+                    url_export = f"https://www.googleapis.com/drive/v3/files/{file_id}/export?mimeType=text/plain&key={API_KEY}"
+                elif mime_type == "text/plain":
+                    # Descargar archivos .txt en bruto
+                    url_export = f"https://www.googleapis.com/drive/v3/files/{file_id}?alt=media&key={API_KEY}"
+                else:
+                    continue  # Ignorar otros tipos de archivo
 
-# Descargar contenido del archivo
-response = requests.get(url_export)
-
-if response.status_code == 200:
-    contenido = response.text
-    documentos.append({"nombre": file_name, "contenido": contenido})
-else:
-    documentos.append({"nombre": file_name, "contenido": "Error al extraer contenido"})
-
+                # Descargar contenido del archivo
+                response = requests.get(url_export)
 
                 if response.status_code == 200:
                     contenido = response.text
